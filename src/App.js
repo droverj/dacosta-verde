@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './hooks/AuthProvider';
 import Navbar from './components/common/Navbar';
 import Home from './components/home/Home';
 import About from './components/about/About';
@@ -15,6 +16,7 @@ function App() {
   return (
     <div className="App">
       <h1>DaCosta Verde eComme Store Landing Page</h1>
+      <AuthProvider>
       <BrowserRouter>
         <Navbar />
 
@@ -29,6 +31,7 @@ function App() {
         </Routes>
 
       </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }

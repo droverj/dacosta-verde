@@ -1,10 +1,41 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Confirmation from './Confirmation'
+import { useAuth } from '../../hooks/AuthProvider';
+import SignOutConfirmation from './SignOutConfirmation';
 import Login from './Login'
 import Logout from './Logout'
 
 const Navbar = () => {
+  const { userData } = useAuth();
+  const [showSignOutConfirmation, setShowSignOutConfirmation] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+
+  const handleSignOutClick = () => {
+    setShowSignOutConfirmation(true);
+  };
+
+  const handleSignInClick = () => {
+    setShowLogin(true);
+  };
+
+  const handleSignOutConfirm = () => {
+    // Perform sign-out logic (e.g., call a signOut function)
+    // ...
+
+    // Close the confirmation modal
+    setShowSignOutConfirmation(false);
+  };
+
+  const handleSignOutCancel = () => {
+    // Close the confirmation modal
+    setShowSignOutConfirmation(false);
+  };
+
+  const handleLoginClose = () => {
+    // Close the login form
+    setShowLogin(false);
+  };
+
   return (
     <div className='navbar'>
       <nav>
@@ -28,15 +59,30 @@ const Navbar = () => {
             <Link to="/cart">Cart</Link>
           </li>
         </ul>
-        <button>Sign In</button>
-        <Link to="/register"> <button>Create Account</button></Link>
-        <Link to="/profile"> <button>View Profile</button></Link>
+
+        {userData ? (
+          <>
+            <button onClick={handleSignOutClick}>Sign Out</button>
+            {showSignOutConfirmation && (
+              <SignOutConfirmation onConfirm={handleSignOutConfirm} onCancel={handleSignOutCancel} />
+            )}
+          </>
+        ) : (
+          <>
+            <p>User is not signed in</p>
+            <button onClick={handleSignInClick}>Sign In</button>
+            {showLogin && <Login onClose={handleLoginClose} />}
+          </>
+        )}
+
+        <Link to="/register">
+          <button>Create Account</button>
+        </Link>
+        <Link to="/profile">
+          <button>View Profile</button>
+        </Link>
       </nav>
-
-      <Login />
-
-      <Confirmation />
-      <Logout />
+      <p>Logged in as: {userData?.email}</p>
     </div>
   )
 }

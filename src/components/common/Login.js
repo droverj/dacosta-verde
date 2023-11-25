@@ -1,9 +1,14 @@
-import React from 'react'
+import React from 'react';
 
-const Login = () => {
+const Login = ({ onClose }) => {
+  // Add your login form JSX and logic here
+
   return (
-    <div>Login</div>
-  )
-}
+    <div>
+      <p>Login form goes here</p>
+      <button onClick={onClose}>Close</button>
+    </div>
+  );
+};
 
-export default Login
+export default Login;
