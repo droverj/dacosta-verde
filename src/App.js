@@ -7,9 +7,11 @@ import Contact from './components/contact/Contact';
 import Shop from './components/shop/Shop';
 import Cart from './components/cart/Cart';
 import CreateAccount from './components/common/CreateAccount';
+import Profile from './components/common/Profile';
 import './App.css';
 
 function App() {
+
   return (
     <div className="App">
       <h1>DaCosta Verde eComme Store Landing Page</h1>
@@ -23,6 +25,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/register" element={<CreateAccount />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
 
       </BrowserRouter>

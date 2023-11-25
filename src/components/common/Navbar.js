@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Confirmation from './Confirmation'
-import CreateAccount from './CreateAccount'
 import Login from './Login'
 import Logout from './Logout'
 
@@ -30,7 +29,8 @@ const Navbar = () => {
           </li>
         </ul>
         <button>Sign In</button>
-       <Link to="/register"> <button>Create Account</button></Link>
+        <Link to="/register"> <button>Create Account</button></Link>
+        <Link to="/profile"> <button>View Profile</button></Link>
       </nav>
 
       <Login />
