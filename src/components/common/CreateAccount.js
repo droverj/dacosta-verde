@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-import { collection, addDoc } from 'firebase/firestore'
-import { db } from '../../firebase-configs/firebase-config'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../../firebase-configs/firebase-config';
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -14,13 +14,12 @@ const CreateAccount = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-
   const handleSignUp = async (e) => {
     e.preventDefault();
 
     // Perform password validation
     if (password !== confirmPassword) {
-      alert("Passwords don't match");
+      setErrorMessage("Passwords don't match");
       return;
     }
 
@@ -29,6 +28,7 @@ const CreateAccount = () => {
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
+      // Sign in the user immediately after account creation
       await signInWithEmailAndPassword(auth, email, password);
 
       // Add user to Firestore with role "user"
@@ -41,12 +41,13 @@ const CreateAccount = () => {
         roles: ['user'], // Assign "user" role to the user
       });
 
-      // Reset form fields
+      // Reset form fields and error message
       setFirstName('');
       setLastName('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
+      setErrorMessage('');
 
       console.log('User created and signed in:', userCredential.user.uid);
       navigate('/');
