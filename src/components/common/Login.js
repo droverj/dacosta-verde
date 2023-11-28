@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = ({ onClose }) => {
@@ -6,6 +7,7 @@ const Login = ({ onClose }) => {
   const [password, setPassword] = useState('');
 
   const auth = getAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +18,7 @@ const Login = ({ onClose }) => {
       const user = userCredential.user;
       console.log('User logged in:', user);
       onClose(); // Close the login form after successful login
+      navigate('/');
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

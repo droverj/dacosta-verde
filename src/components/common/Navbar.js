@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/AuthProvider';
 import { getAuth, signOut } from "firebase/auth";
 import SignOutConfirmation from './SignOutConfirmation';
@@ -9,9 +9,11 @@ import Login from './Login'
 const Navbar = () => {
   const [showSignOutConfirmation, setShowSignOutConfirmation] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   const { userData } = useAuth();
   const auth = getAuth();
+  const navigate = useNavigate();
 
   const handleSignOutClick = () => {
     setShowSignOutConfirmation(true);
@@ -21,15 +23,19 @@ const Navbar = () => {
     setShowLogin(true);
   };
 
-  const handleSignOutConfirm = () => {
-    signOut(auth).then(() => {
-      // Sign-out successful.
-    }).catch((error) => {
-      // An error happened.
-    });
-
-    // Close the confirmation modal
-    setShowSignOutConfirmation(false);
+  const handleSignOutConfirm = async () => {
+    try {
+      setSigningOut(true);
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error('Sign-out error:', error.message);
+      // Handle the error, e.g., show an error message to the user
+    } finally {
+      setSigningOut(false);
+      // Close the confirmation modal whether sign-out succeeds or fails
+      setShowSignOutConfirmation(false);
+    }
   };
 
   const handleSignOutCancel = () => {
@@ -74,7 +80,9 @@ const Navbar = () => {
 
         {userData ? (
           <>
-            <button onClick={handleSignOutClick}>Sign Out</button>
+            <button onClick={handleSignOutClick} disabled={signingOut}>
+              {signingOut ? 'Signing Out...' : 'Sign Out'}
+            </button>
             {showSignOutConfirmation && (
               <SignOutConfirmation onConfirm={handleSignOutConfirm} onCancel={handleSignOutCancel} />
             )}
