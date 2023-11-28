@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/AuthProvider';
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, signInWithEmailAndPassword } from "firebase/auth";
 import SignOutConfirmation from './SignOutConfirmation';
 import Login from './Login'
 // import Logout from './Logout'
 
 const Navbar = () => {
-  const { userData } = useAuth();
   const [showSignOutConfirmation, setShowSignOutConfirmation] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
+  const { userData } = useAuth();
   const auth = getAuth();
-  console.log(auth);
 
   const handleSignOutClick = () => {
     setShowSignOutConfirmation(true);
@@ -89,7 +88,7 @@ const Navbar = () => {
           <button>View Profile</button>
         </Link>
       </nav>
-      {/* <p>Logged in as: {userData?.email}</p> */}
+      <p>Logged in as: {userData?.email}</p> 
     </div>
   )
 }
