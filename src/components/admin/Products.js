@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
-import { addProduct, getAllProducts, updateProduct, deleteProduct } from '../functions/product-functions';
+import { addProduct, getAllProducts, updateProduct, deleteProduct } from '../../functions/product-functions';
 
 const Products = () => {
   const { userData } = useAuth();

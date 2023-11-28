@@ -9,6 +9,7 @@ import Shop from './components/shop/Shop';
 import Cart from './components/cart/Cart';
 import CreateAccount from './components/common/CreateAccount';
 import Profile from './components/common/Profile';
+import Admin from './components/admin/Admin';
 import './App.css';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/register" element={<CreateAccount />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
 
       </BrowserRouter>

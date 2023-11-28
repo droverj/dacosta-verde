@@ -64,6 +64,12 @@ const Navbar = () => {
           <li>
             <Link to="/cart">Cart</Link>
           </li>
+
+          {userData?.roles.includes('admin') && (
+            <li>
+              <Link to="/admin">Admin</Link>
+            </li>
+          )}
         </ul>
 
         {userData ? (
@@ -88,7 +94,7 @@ const Navbar = () => {
           <button>View Profile</button>
         </Link>
       </nav>
-      <p>Logged in as: {userData?.email}</p> 
+      <p>Logged in as: {userData?.email}</p>
     </div>
   )
 }
