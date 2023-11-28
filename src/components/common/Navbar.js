@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/AuthProvider';
-import { getAuth, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import SignOutConfirmation from './SignOutConfirmation';
 import Login from './Login'
 // import Logout from './Logout'
