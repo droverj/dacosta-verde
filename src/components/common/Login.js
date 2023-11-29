@@ -16,7 +16,6 @@ const Login = ({ onClose }) => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       // Signed in
       const user = userCredential.user;
-      console.log('User logged in:', user);
       onClose(); // Close the login form after successful login
       navigate('/');
     } catch (error) {

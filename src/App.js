@@ -16,7 +16,6 @@ function App() {
 
   return (
     <div className="App">
-      <h1>DaCosta Verde eComme Store Landing Page</h1>
       <AuthProvider>
       <BrowserRouter>
         <Navbar />

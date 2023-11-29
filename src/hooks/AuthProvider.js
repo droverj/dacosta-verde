@@ -7,11 +7,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user] = useAuthState(auth);
-  console.log(user);
-
   const [userData, setUserData] = useState(null);
-  console.log(userData);
-
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {

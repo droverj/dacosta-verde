@@ -1,51 +1,75 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../hooks/AuthProvider';
-import { addProduct, getAllProducts, updateProduct, deleteProduct } from '../../functions/product-functions';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { collection, addDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getStorage, getDownloadURL } from 'firebase/storage';
 
-const Products = () => {
-  const { userData } = useAuth();
-  const [products, setProducts] = useState([]);
+const AddProductForm = () => {
+  const { register, handleSubmit, reset } = useForm();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const productsData = await getAllProducts();
-      setProducts(productsData);
-    };
+  const onSubmit = async (data) => {
+    try {
+      // Extract the File object from the FileList
+      const imageFile = data.image[0];
 
-    fetchProducts();
-  }, []);
+      // Add product data to Firestore
+      const db = getFirestore();
+      const productsCollection = collection(db, 'products');
+      const productRef = await addDoc(productsCollection, {
+        label: data.label,
+        weight: data.weight,
+        quantity: data.quantity,
+        pricePerPound: data.pricePerPound,
+      });
 
-  const handleAddProduct = async () => {
-    // Check if the user is an admin
-    if (userData?.roles.includes('admin')) {
-      const newProduct = {
-        price: 0, // Set default values
-        weight: 0,
-        label: '',
-        image: '',
-      };
+      // Upload image to Firebase Storage
+      const storage = getStorage();
+      const imageRef = ref(storage, `product-images/${productRef.id}`);
+      await uploadBytes(imageRef, imageFile);
 
-      // Add the new product to Firestore
-      await addProduct(newProduct);
+      // Get the download URL of the uploaded image
+      const imageUrl = await getDownloadURL(imageRef);
 
-      // Fetch and update the products list
-      const updatedProducts = await getAllProducts();
-      setProducts(updatedProducts);
-    } else {
-      // User is not authorized to add a product
-      console.log('User is not authorized to add a product');
+      // Update the product document with the image URL using set with merge
+      await setDoc(productRef, { imageUrl }, { merge: true });
+
+      console.log('Product added successfully!');
+
+      // Clear form fields
+      reset();
+    } catch (error) {
+      console.error('Error adding product:', error.message);
     }
   };
-
-  // Similar functions for handling update and delete
-
   return (
-    <div>
-      <h2>Products</h2>
-      {userData?.roles.includes('admin') && <button onClick={handleAddProduct}>Add Product</button>}
-      {/* Display products and provide options for editing and deleting */}
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <label>
+        Label:
+        <input type="text" {...register('label')} />
+      </label>
+
+      <label>
+        Weight:
+        <input type="text" {...register('weight')} />
+      </label>
+
+      <label>
+        Quantity:
+        <input type="text" {...register('quantity')} />
+      </label>
+
+      <label>
+        Price per Pound:
+        <input type="text" {...register('pricePerPound')} />
+      </label>
+
+      <label>
+        Image:
+        <input type="file" {...register('image')} />
+      </label>
+
+      <button type="submit">Add Product</button>
+    </form>
   );
 };
 
-export default Products;
+export default AddProductForm;

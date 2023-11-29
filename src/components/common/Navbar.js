@@ -10,7 +10,6 @@ const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false);
 
   const { user, isAdmin } = useAuth();
-  console.log("user: ", user, "admin: ", isAdmin)
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -46,7 +45,7 @@ const Navbar = () => {
             </li>
           ))}
 
-          {user?.roles?.includes('admin') && (
+          {isAdmin && (
             <li>
               <Link to="/admin">Admin</Link>
             </li>
