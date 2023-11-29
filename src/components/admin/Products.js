@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, deleteDoc, doc, setDoc, getDoc, getFirestore } from 'firebase/firestore';
-import { getStorage, ref, getDownloadURL, deleteObject, uploadBytes } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL, deleteObject } from 'firebase/storage';
 import AddProductForm from './AddProductForm';
 
 const Products = () => {

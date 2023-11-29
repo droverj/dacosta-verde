@@ -13,13 +13,11 @@ const Login = ({ onClose }) => {
     e.preventDefault();
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       // Signed in
-      const user = userCredential.user;
       onClose(); // Close the login form after successful login
       navigate('/');
     } catch (error) {
-      const errorCode = error.code;
       const errorMessage = error.message;
       console.error('Login error:', errorMessage);
       // Handle the error as needed (e.g., display an error message to the user)
