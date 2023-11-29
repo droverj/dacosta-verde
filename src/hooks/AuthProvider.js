@@ -1,41 +1,62 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../firebase-configs/firebase-config';
+import { doc, getDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user] = useAuthState(auth);
+  console.log(user);
+
+  const [userData, setUserData] = useState(null);
+  console.log(userData);
+
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const auth = getAuth();
-    
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
+    const fetchData = async () => {
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
 
-    // Cleanup function to unsubscribe when the component unmounts
-    return () => unsubscribe();
-  }, []);
+        try {
+          const userDocSnap = await getDoc(userDocRef);
 
-  const signIn = (user) => {
-    setUser(user);
-  };
+          if (userDocSnap.exists()) {
+            const userDataFromFirestore = userDocSnap.data();
 
-  const signOut = () => {
-    setUser(null);
-  };
+            setUserData({
+              uid: user.uid,
+              email: user.email,
+              roles: userDataFromFirestore.roles || [],
+              // Add more fields as needed
+            });
 
-  return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  );
+            // Check if the user has the 'admin' role in Firestore
+            setIsAdmin(userDataFromFirestore.roles && userDataFromFirestore.roles.includes('admin'));
+          } else {
+            setUserData(null);
+            setIsAdmin(false);
+            console.error('User document does not exist in Firestore.');
+          }
+        } catch (error) {
+          console.error('Error fetching user data from Firestore:', error);
+          setUserData(null);
+          setIsAdmin(false);
+        }
+      } else {
+        setUserData(null);
+        setIsAdmin(false);
+      }
+    };
+
+    fetchData();
+  }, [user]);
+
+
+  return <AuthContext.Provider value={{ user, userData, isAdmin }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  return useContext(AuthContext);
 };

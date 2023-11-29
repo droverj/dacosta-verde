@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase-configs/firebase-config';
 
 const CreateAccount = () => {
@@ -28,12 +28,11 @@ const CreateAccount = () => {
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      // Sign in the user immediately after account creation
-      await signInWithEmailAndPassword(auth, email, password);
-
       // Add user to Firestore with role "user"
       const usersCollection = collection(db, 'users');
-      await addDoc(usersCollection, {
+      const userDocRef = doc(usersCollection, userCredential.user.uid);
+
+      await setDoc(userDocRef, {
         uid: userCredential.user.uid,
         firstName,
         lastName,
@@ -51,7 +50,6 @@ const CreateAccount = () => {
 
       console.log('User created and signed in:', userCredential.user.uid);
       navigate('/');
-
     } catch (error) {
       console.error('Error creating user: ', error.message);
       setErrorMessage(error.message);

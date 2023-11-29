@@ -9,11 +9,10 @@ const Navbar = () => {
   const [showSignOutConfirmation, setShowSignOutConfirmation] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+  console.log("user: ", user, "admin: ", isAdmin)
   const auth = getAuth();
   const navigate = useNavigate();
-
-  console.log(user?.email); // Use optional chaining to prevent errors if user is null
 
   const handleSignOutClick = () => setShowSignOutConfirmation(true);
   const handleSignInClick = () => setShowLogin(true);
