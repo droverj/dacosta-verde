@@ -1,87 +1,63 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/AuthProvider';
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut } from 'firebase/auth';
 import SignOutConfirmation from './SignOutConfirmation';
-import Login from './Login'
-// import Logout from './Logout'
+import Login from './Login';
 
 const Navbar = () => {
   const [showSignOutConfirmation, setShowSignOutConfirmation] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [signingOut, setSigningOut] = useState(false);
 
-  const { userData } = useAuth();
+  const { user } = useAuth();
   const auth = getAuth();
   const navigate = useNavigate();
 
-  const handleSignOutClick = () => {
-    setShowSignOutConfirmation(true);
-  };
+  console.log(user?.email); // Use optional chaining to prevent errors if user is null
 
-  const handleSignInClick = () => {
-    setShowLogin(true);
-  };
+  const handleSignOutClick = () => setShowSignOutConfirmation(true);
+  const handleSignInClick = () => setShowLogin(true);
 
   const handleSignOutConfirm = async () => {
     try {
-      setSigningOut(true);
-      await signOut(auth);
-      navigate('/');
+      if (user) {
+        await signOut(auth);
+        navigate('/');
+      }
     } catch (error) {
       console.error('Sign-out error:', error.message);
-      // Handle the error, e.g., show an error message to the user
     } finally {
-      setSigningOut(false);
-      // Close the confirmation modal whether sign-out succeeds or fails
       setShowSignOutConfirmation(false);
     }
   };
 
-  const handleSignOutCancel = () => {
-    // Close the confirmation modal
-    setShowSignOutConfirmation(false);
-  };
-
-  const handleLoginClose = () => {
-    // Close the login form
-    setShowLogin(false);
-  };
+  const handleSignOutCancel = () => setShowSignOutConfirmation(false);
+  const handleLoginClose = () => setShowLogin(false);
 
   return (
-    <div className='navbar'>
+    <div className="navbar">
       <nav>
         <h1>
           <Link to="/">DaCosta Verde</Link>
         </h1>
         <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/contact">Contact</Link>
-          </li>
-          <li>
-            <Link to="/shop">Shop</Link>
-          </li>
-          <li>
-            <Link to="/cart">Cart</Link>
-          </li>
+          {['Home', 'About', 'Contact', 'Shop', 'Cart'].map((link) => (
+            <li key={link}>
+              <Link to={`/${link.toLowerCase()}`}>{link}</Link>
+            </li>
+          ))}
 
-          {userData?.roles.includes('admin') && (
+          {user?.roles?.includes('admin') && (
             <li>
               <Link to="/admin">Admin</Link>
             </li>
           )}
         </ul>
 
-        {userData ? (
+        {user?.email ? (
           <>
-            <button onClick={handleSignOutClick} disabled={signingOut}>
-              {signingOut ? 'Signing Out...' : 'Sign Out'}
+            <button onClick={handleSignOutClick} disabled={showSignOutConfirmation}>
+              {showSignOutConfirmation ? 'Signing Out...' : 'Sign Out'}
             </button>
             {showSignOutConfirmation && (
               <SignOutConfirmation onConfirm={handleSignOutConfirm} onCancel={handleSignOutCancel} />
@@ -102,9 +78,9 @@ const Navbar = () => {
           <button>View Profile</button>
         </Link>
       </nav>
-      <p>Logged in as: {userData?.email}</p>
+      <p>Logged in as: {user?.email}</p>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
