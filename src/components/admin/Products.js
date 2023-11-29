@@ -1,75 +1,70 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { collection, addDoc, getFirestore, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getStorage, getDownloadURL } from 'firebase/storage';
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import AddProductForm from './AddProductForm';
 
-const AddProductForm = () => {
-  const { register, handleSubmit, reset } = useForm();
+const Products = () => {
+  const [products, setProducts] = useState([]);
 
-  const onSubmit = async (data) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch products data from Firestore
+        const db = getFirestore();
+        const productsCollection = collection(db, 'products');
+        const querySnapshot = await getDocs(productsCollection);
+
+        // Process each product and get image URL
+        const productsData = [];
+        for (const doc of querySnapshot.docs) {
+          const productData = doc.data();
+
+          // Get the download URL of the product image
+          const imageUrl = await getImageUrl(doc.id);
+
+          productsData.push({ ...productData, imageUrl });
+        }
+
+        setProducts(productsData);
+      } catch (error) {
+        console.error('Error fetching products:', error.message);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array means this effect runs once when the component mounts
+
+  const getImageUrl = async (productId) => {
     try {
-      // Extract the File object from the FileList
-      const imageFile = data.image[0];
-
-      // Add product data to Firestore
-      const db = getFirestore();
-      const productsCollection = collection(db, 'products');
-      const productRef = await addDoc(productsCollection, {
-        label: data.label,
-        weight: data.weight,
-        quantity: data.quantity,
-        pricePerPound: data.pricePerPound,
-      });
-
-      // Upload image to Firebase Storage
+      // Get image URL from Firebase Storage
       const storage = getStorage();
-      const imageRef = ref(storage, `product-images/${productRef.id}`);
-      await uploadBytes(imageRef, imageFile);
-
-      // Get the download URL of the uploaded image
+      const imageRef = ref(storage, `product-images/${productId}`);
       const imageUrl = await getDownloadURL(imageRef);
-
-      // Update the product document with the image URL using set with merge
-      await setDoc(productRef, { imageUrl }, { merge: true });
-
-      console.log('Product added successfully!');
-
-      // Clear form fields
-      reset();
+      return imageUrl;
     } catch (error) {
-      console.error('Error adding product:', error.message);
+      console.error('Error fetching image:', error.message);
+      return null;
     }
   };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label>
-        Label:
-        <input type="text" {...register('label')} />
-      </label>
-
-      <label>
-        Weight:
-        <input type="text" {...register('weight')} />
-      </label>
-
-      <label>
-        Quantity:
-        <input type="text" {...register('quantity')} />
-      </label>
-
-      <label>
-        Price per Pound:
-        <input type="text" {...register('pricePerPound')} />
-      </label>
-
-      <label>
-        Image:
-        <input type="file" {...register('image')} />
-      </label>
-
-      <button type="submit">Add Product</button>
-    </form>
+    <div>
+      <AddProductForm />
+      <br />
+      <h1>View Your Products</h1>
+      <ul>
+        {products.map((product) => (
+          <li key={product.label}>
+            <p>Label: {product.label}</p>
+            <p>Weight: {product.weight}</p>
+            <p>Quantity: {product.quantity}</p>
+            <p>Price per Pound: {product.pricePerPound}</p>
+            {product.imageUrl && <img src={product.imageUrl} alt={product.label} style={{ maxWidth: '100px' }} />}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
-export default AddProductForm;
+export default Products;
