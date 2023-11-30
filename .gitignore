@@ -16,6 +16,11 @@
 /functions/
 /firebase.json
 
+*.log
+.firebase/
+ui-debug.log
+firebase-debug.log
+
 # misc
 .DS_Store
 .env.local
