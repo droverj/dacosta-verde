@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom'
 import '../../styles/Navbar.scss';
 
@@ -28,6 +28,7 @@ const Navbar = () => {
           </li>
         </ul>
       </nav>
+      <button><Link to='/auth'>Sign In</Link></button>
     </div>
   )
 }

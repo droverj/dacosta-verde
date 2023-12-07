@@ -7,7 +7,7 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Shop from './components/Shop';
 import Cart from './components/Cart';
-import CreateAccount from './components/common/Register';
+import Auth from './components/common/Auth';
 import Account from './components/common/Account';
 import Admin from './components/admin/Admin';
 import './App.scss';
@@ -27,7 +27,7 @@ function App() {
               <Route path="/shop" element={<Shop />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/register" element={<CreateAccount />} />
+              <Route path="/auth" element={<Auth />} />
               <Route path="/account" element={<Account />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>
