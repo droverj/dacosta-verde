@@ -10,28 +10,30 @@ import Cart from './components/Cart';
 import CreateAccount from './components/common/Register';
 import Profile from './components/common/Profile';
 import Admin from './components/admin/Admin';
-import './App.css';
+import './App.scss';
 
 function App() {
 
   return (
     <div className="App">
       <AuthProvider>
-      <BrowserRouter>
-        <Navbar />
+        <BrowserRouter>
+          <Navbar />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/register" element={<CreateAccount />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-
-      </BrowserRouter>
+          <div className='main-container'>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/register" element={<CreateAccount />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </div>
+          
+        </BrowserRouter>
       </AuthProvider>
     </div>
   );

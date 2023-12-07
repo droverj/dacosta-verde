@@ -1,11 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import '../../styles/Navbar.scss';
 
 const Navbar = () => {
   return (
     <div className='navbar'>
-      <Link to='/'><h1>DaCosta Verde</h1></Link>
       <nav>
+        <h1><Link to='/'>DaCosta Verde</Link></h1>
         <ul>
           <li>
             <Link to='/'>Home</Link>
@@ -20,10 +21,10 @@ const Navbar = () => {
             <Link to='/shop'>Shop</Link>
           </li>
           <li>
-            <Link to='/cart'>Cart</Link>
+            <Link to='/profile'>Profile</Link>
           </li>
           <li>
-            <Link to='/profile'>Profile</Link>
+            <Link to='/cart'>Cart</Link>
           </li>
         </ul>
       </nav>
