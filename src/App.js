@@ -8,7 +8,7 @@ import Contact from './components/Contact';
 import Shop from './components/Shop';
 import Cart from './components/Cart';
 import CreateAccount from './components/common/Register';
-import Profile from './components/common/Profile';
+import Account from './components/common/Account';
 import Admin from './components/admin/Admin';
 import './App.scss';
 
@@ -28,7 +28,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/register" element={<CreateAccount />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/account" element={<Account />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>
           </div>
