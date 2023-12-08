@@ -3,7 +3,7 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
-const Register = ({createAccount}) => {
+const Register = ({ createAccount }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,7 +30,7 @@ const Register = ({createAccount}) => {
       const db = getFirestore();
       const usersCollection = collection(db, 'users');
       await addDoc(usersCollection, {
-        uid: user.uid,
+        uid: user.uid, // This line should be modified
         firstName,
         lastName,
         email,
@@ -44,7 +44,7 @@ const Register = ({createAccount}) => {
   };
 
   const handleBack = () => {
-   createAccount(false);
+    createAccount(false);
   };
 
   return (

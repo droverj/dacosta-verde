@@ -24,6 +24,8 @@ export const AuthProvider = ({ children }) => {
             setUserData({
               uid: user.uid,
               email: user.email,
+              firstName: userDataFromFirestore.firstName,
+              lastName: userDataFromFirestore.lastName,
               roles: userDataFromFirestore.roles || [],
               // Add more fields as needed
             });
