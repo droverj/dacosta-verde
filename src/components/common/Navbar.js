@@ -1,8 +1,11 @@
 import React from 'react';
+import { useAuth } from '../../hooks/AuthProvider';
 import { Link } from 'react-router-dom'
 import '../../styles/Navbar.scss';
 
 const Navbar = () => {
+  const { isAdmin } = useAuth();
+
   return (
     <div className='navbar'>
       <nav>
@@ -26,6 +29,11 @@ const Navbar = () => {
           <li>
             <Link to='/cart'>Cart</Link>
           </li>
+          {isAdmin &&
+            <li className='admin'>
+              <Link to='/Admin'>Admin</Link>
+            </li>
+          }
         </ul>
       </nav>
       <button><Link to='/auth'>Sign In</Link></button>
