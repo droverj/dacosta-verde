@@ -10,11 +10,7 @@ const Login = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
-  const { user, userData, isAdmin } = useAuth(); 
-
-  console.log(user)
-  // console.log(isAdmin);
-  // console.log(userData);
+  const { userData } = useAuth(); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
