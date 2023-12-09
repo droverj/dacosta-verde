@@ -7,7 +7,7 @@ import '../../styles/CartTracker.scss';
 
 const CartTracker = () => {
   // const { totalItems } = useCart();
-  const totalItems = 99;
+  const totalItems = 0;
 
   return (
     <div className="cart-tracker">

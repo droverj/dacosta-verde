@@ -18,10 +18,10 @@ const Navbar = () => {
           <Link to='contact'>Contact</Link>
           <Link to='/shop'>Shop</Link>
         </div>
+        <CartTracker />
       </div>
 
       <div className='user-links'>
-        <CartTracker />
         <Link to='/account'>Account</Link>
 
         {isAdmin &&

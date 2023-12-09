@@ -7,6 +7,7 @@ const Register = ({ createAccount }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
@@ -35,6 +36,7 @@ const Register = ({ createAccount }) => {
         firstName,
         lastName,
         email,
+        phoneNumber,
         roles: ['user'],
       });
 
@@ -76,6 +78,15 @@ const Register = ({ createAccount }) => {
             type='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Phone Number:
+          <input
+            type='tel'
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             required
           />
         </label>
