@@ -6,16 +6,19 @@
 
   .cart-count {
     position: absolute;
-    top: -1rem;
+    top: -.5rem;
     right: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: green;
-    color: white;
-    border: none;
+    background-color: white;
+    border: 2px solid darkgreen;
+    color: darkgreen;
     border-radius: 50%;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
+    padding: 2px;
+    font-size: 12px;
+    font-weight: 700;
   }
 }

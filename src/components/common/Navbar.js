@@ -9,40 +9,38 @@ const Navbar = () => {
   const { isAdmin, user } = useAuth();
 
   return (
-    <div className='navbar'>
-      <nav>
+    <nav>
+      <div className='main-pages-container'>
         <h1><Link to='/'>DaCosta Verde</Link></h1>
-        <ul>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='contact'>Contact</Link>
-          </li>
-          <li>
-            <Link to='/shop'>Shop</Link>
-          </li>
-            <CartTracker />
-          <li>
-            <Link to='/account'>Account</Link>
-          </li>
-          {isAdmin &&
-            <li className='admin'>
-              <Link to='/Admin'>Admin</Link>
-            </li>
-          }
-        </ul>
-      </nav>
-      {user ? (
-        // If the user is authenticated, show the Logout component
-        <Logout />
-      ) : (
-        // If the user is not authenticated, show the Sign In button
-        <button>
-          <Link to='/auth'>Sign In</Link>
-        </button>
-      )}
-    </div>
+
+        <div className='page-links'>
+          <Link to='/'>Home</Link>
+          <Link to='contact'>Contact</Link>
+          <Link to='/shop'>Shop</Link>
+        </div>
+      </div>
+
+      <div className='user-links'>
+        <CartTracker />
+        <Link to='/account'>Account</Link>
+
+        {isAdmin &&
+          <div className='admin-link'>
+            <Link to='/Admin' className='admin-link'>Admin</Link>
+          </div>
+        }
+
+        {user ? (
+          // If the user is authenticated, show the Logout component
+          <Logout />
+        ) : (
+          // If the user is not authenticated, show the Sign In button
+          <button>
+            <Link to='/auth'>Sign In</Link>
+          </button>
+        )}
+      </div>
+    </nav>
   )
 }
 
