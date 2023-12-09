@@ -1,0 +1,21 @@
+.cart-tracker {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .cart-count {
+    position: absolute;
+    top: -1rem;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}

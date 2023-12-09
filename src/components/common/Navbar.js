@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
 import { Link } from 'react-router-dom'
-import Logout from './Logout'; 
+import CartTracker from './CartTracker';
+import Logout from './Logout';
 import '../../styles/Navbar.scss';
 
 const Navbar = () => {
@@ -16,19 +17,14 @@ const Navbar = () => {
             <Link to='/'>Home</Link>
           </li>
           <li>
-            <Link to='/about'>About</Link>
-          </li>
-          <li>
             <Link to='contact'>Contact</Link>
           </li>
           <li>
             <Link to='/shop'>Shop</Link>
           </li>
+            <CartTracker />
           <li>
             <Link to='/account'>Account</Link>
-          </li>
-          <li>
-            <Link to='/cart'>Cart</Link>
           </li>
           {isAdmin &&
             <li className='admin'>

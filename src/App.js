@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './hooks/AuthProvider';
 import Navbar from './components/common/Navbar';
 import Home from './components/Home';
-import About from './components/About';
 import Contact from './components/Contact';
 import Shop from './components/Shop';
 import Cart from './components/Cart';
@@ -23,7 +22,6 @@ function App() {
           <div className='main-container'>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/cart" element={<Cart />} />
