@@ -1,10 +1,11 @@
 import React from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
 import { Link } from 'react-router-dom'
+import Logout from './Logout'; 
 import '../../styles/Navbar.scss';
 
 const Navbar = () => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
 
   return (
     <div className='navbar'>
@@ -36,7 +37,15 @@ const Navbar = () => {
           }
         </ul>
       </nav>
-      <button><Link to='/auth'>Sign In</Link></button>
+      {user ? (
+        // If the user is authenticated, show the Logout component
+        <Logout />
+      ) : (
+        // If the user is not authenticated, show the Sign In button
+        <button>
+          <Link to='/auth'>Sign In</Link>
+        </button>
+      )}
     </div>
   )
 }

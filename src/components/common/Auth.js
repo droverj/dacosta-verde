@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../hooks/AuthProvider';
 import Login from './Login';
 import Register from './Register';
 
 const Auth = () => {
   const [createAccount, setCreateAccount] = useState(false);
+  const { userData } = useAuth();
 
   return (
     <div>

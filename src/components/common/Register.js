@@ -15,34 +15,34 @@ const Register = ({ createAccount }) => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-  
+
     // Check if passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-  
+
     try {
       const auth = getAuth();
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
-  
+
       // Add user to Firestore database
       const db = getFirestore();
       const usersCollection = collection(db, 'users');
       const userDocRef = doc(usersCollection, user.uid); // Update this line
-  
+
       await setDoc(userDocRef, {
         firstName,
         lastName,
         email,
         roles: ['user'],
       });
-  
+
       navigate('/');
     } catch (error) {
       setError(error.message);
     }
-  };  
+  };
 
   const handleBack = () => {
     createAccount(false);
