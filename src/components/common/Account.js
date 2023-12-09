@@ -11,6 +11,15 @@ const Account = () => {
   if (user) {
     // Access the creationTime value from the user's metadata
     creationTime = user.metadata.creationTime;
+
+    // Convert creationTime to a JavaScript Date object
+    const creationDate = new Date(creationTime);
+
+    // Format the date to display only month and year
+    const formattedDate = creationDate.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+
+    // Update creationTime with the formatted date
+    creationTime = formattedDate;
   }
 
   return (
