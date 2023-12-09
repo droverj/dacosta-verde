@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, setDoc, doc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 const Register = ({ createAccount }) => {
@@ -15,33 +15,34 @@ const Register = ({ createAccount }) => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+  
     // Check if passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-
+  
     try {
       const auth = getAuth();
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
-
+  
       // Add user to Firestore database
       const db = getFirestore();
       const usersCollection = collection(db, 'users');
-      await addDoc(usersCollection, {
-        uid: user.uid, // This line should be modified
+      const userDocRef = doc(usersCollection, user.uid); // Update this line
+  
+      await setDoc(userDocRef, {
         firstName,
         lastName,
         email,
-        role: 'user',
+        roles: ['user'],
       });
-
+  
       navigate('/');
     } catch (error) {
       setError(error.message);
     }
-  };
+  };  
 
   const handleBack = () => {
     createAccount(false);

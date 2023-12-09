@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [user] = useAuthState(auth);
   const [userData, setUserData] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  
 
   useEffect(() => {
     const fetchData = async () => {

@@ -2,7 +2,9 @@ import React from 'react'
 import { useAuth } from '../hooks/AuthProvider';
 
 const Home = () => {
-  const { userData } = useAuth();
+  const { userData, isAdmin } = useAuth();
+  console.log(userData);
+console.log(isAdmin)
 
   return (
     <div className='home'>
