@@ -22,7 +22,9 @@ const Navbar = () => {
       </div>
 
       <div className='user-links'>
-        <Link to='/account'>Account</Link>
+        {user && (
+          <Link to='/account'>Account</Link>
+        )}
 
         {isAdmin &&
           <div className='admin-link'>
