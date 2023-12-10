@@ -28,7 +28,7 @@ const CreateProduct = () => {
 
   const handleUpload = async () => {
     if (selectedImage) {
-      const imageRef = ref(storage, `images/${selectedImage.name}`);
+      const imageRef = ref(storage, `product-images/${selectedImage.name}`);
       const uploadTask = uploadBytesResumable(imageRef, selectedImage);
 
       uploadTask.on('state_changed', (snapshot) => {
