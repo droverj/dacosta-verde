@@ -28,17 +28,18 @@ const ChangeProductImage = ({ productId, onClose }) => {
   };
 
   const handleUpdateImage = async () => {
-    if (image) {
-      setLoading(true);
+    setLoading(true);
 
-      try {
+    try {
+      if (image) {
         // Upload the new image to Storage
         const newImageRef = ref(storage, `product-images/${image.name}`);
         await uploadBytes(newImageRef, image);
         const newImageUrl = await getDownloadURL(newImageRef);
 
         // Delete the old image from Storage (if it exists)
-        if (oldImagePath) {
+        if (oldImagePath && !oldImagePath.includes('/static/media')) {
+          // Only delete if the old image is not a static asset
           const oldImageRef = ref(storage, oldImagePath);
           await deleteObject(oldImageRef);
           console.log('Old image deleted successfully');
@@ -47,14 +48,18 @@ const ChangeProductImage = ({ productId, onClose }) => {
         // Update the product with the new image URL
         const productDocRef = doc(db, 'products', productId);
         await updateDoc(productDocRef, { image: newImageUrl, oldImage: newImageRef.fullPath });
-
-        onClose(); // Close the edit modal or navigate back
-      } catch (error) {
-        console.error('Error updating product image:', error);
-        // You can handle the error, e.g., show a user-friendly message
-      } finally {
-        setLoading(false);
+      } else {
+        // If no new image is selected, update to the default image
+        const productDocRef = doc(db, 'products', productId);
+        await updateDoc(productDocRef, { image: '/static/media/highland-cow-cartoon.5728f958983ebda80af7.jpeg', oldImage: null });
       }
+
+      onClose(); // Close the edit modal or navigate back
+    } catch (error) {
+      console.error('Error updating product image:', error);
+      // You can handle the error, e.g., show a user-friendly message
+    } finally {
+      setLoading(false);
     }
   };
 
