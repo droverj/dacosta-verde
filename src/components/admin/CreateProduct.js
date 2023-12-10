@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
 import { storage } from '../../firebase-configs/firebase-config';
-import HighlandCow from '../../images/highland-cow-cartoon.jpeg'
+import HighlandCow from '../../images/highland-cow-cartoon.jpeg';
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
     title: '',
     price: '',
+    weight: '',
+    weightUnit: 'oz.',
+    soldInBulk: false,
+    pricePerPound: false,
+    averageWeight: false,
+    bulkPrice: '',
   });
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -15,10 +21,12 @@ const CreateProduct = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === 'checkbox' ? checked : value;
+
     setProduct((prevProduct) => ({
       ...prevProduct,
-      [name]: value,
+      [name]: inputValue,
     }));
   };
 
@@ -61,6 +69,12 @@ const CreateProduct = () => {
       const docRef = await addDoc(productsCollection, {
         title: product.title,
         price: product.price,
+        weight: product.weight,
+        weightUnit: product.weightUnit,
+        soldInBulk: product.soldInBulk,
+        pricePerPound: product.pricePerPound,
+        averageWeight: product.averageWeight,
+        bulkPrice: product.soldInBulk ? product.bulkPrice : null,
         image: imageUrl || HighlandCow, // Use default image if imageUrl is null
       });
 
@@ -70,6 +84,12 @@ const CreateProduct = () => {
       setProduct({
         title: '',
         price: '',
+        weight: '',
+        weightUnit: 'oz.',
+        soldInBulk: false,
+        pricePerPound: false,
+        averageWeight: false,
+        bulkPrice: '',
       });
       setSelectedImage(null);
       setImageUrl(null);
@@ -91,6 +111,35 @@ const CreateProduct = () => {
           Price:
           <input type="text" name="price" value={product.price} onChange={handleInputChange} required />
         </label>
+        <label>
+          Price is per pound
+          <input type="checkbox" name="pricePerPound" checked={product.pricePerPound} onChange={handleInputChange} />
+        </label>
+        <label>
+          Sold by average weight
+          <input type="checkbox" name="averageWeight" checked={product.averageWeight} onChange={handleInputChange} />
+        </label>
+        <label>
+          Weight:
+          <input type="number" name="weight" value={product.weight} onChange={handleInputChange} />
+        </label>
+        <label>
+          Weight Unit:
+          <select name="weightUnit" value={product.weightUnit} onChange={handleInputChange}>
+            <option value="oz.">oz.</option>
+            <option value="Lbs.">Lbs.</option>
+          </select>
+        </label>
+        <label>
+          Sold in bulk
+          <input type="checkbox" name="soldInBulk" checked={product.soldInBulk} onChange={handleInputChange} />
+        </label>
+        {product.soldInBulk && (
+          <label>
+            Bulk Price:
+            <input type="text" name="bulkPrice" value={product.bulkPrice} onChange={handleInputChange} />
+          </label>
+        )}
         <label>
           Product Image:
           <input type="file" accept="image/*" onChange={handleImageChange} />
