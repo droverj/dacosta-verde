@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, collection, setDoc, doc } from 'firebase/firestore';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+import {
+  getFirestore,
+  collection,
+  setDoc,
+  doc,
+} from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import PhoneInput from 'react-phone-number-input';
+
+import 'react-phone-number-input/style.css';
 
 const Register = ({ createAccount }) => {
   const [firstName, setFirstName] = useState('');
@@ -25,12 +36,16 @@ const Register = ({ createAccount }) => {
 
     try {
       const auth = getAuth();
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
       // Add user to Firestore database
       const db = getFirestore();
       const usersCollection = collection(db, 'users');
-      const userDocRef = doc(usersCollection, user.uid); // Update this line
+      const userDocRef = doc(usersCollection, user.uid);
 
       await setDoc(userDocRef, {
         firstName,
@@ -83,10 +98,11 @@ const Register = ({ createAccount }) => {
         </label>
         <label>
           Phone Number:
-          <input
-            type='tel'
+          <PhoneInput
+            defaultCountry='CA'
+            countries={['US', 'CA']}
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            onChange={setPhoneNumber}
             required
           />
         </label>
@@ -116,3 +132,4 @@ const Register = ({ createAccount }) => {
 };
 
 export default Register;
+

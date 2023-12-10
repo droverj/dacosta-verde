@@ -15,6 +15,7 @@
 /firebase-config.js
 /functions/
 /firebase.json
+/.firebase/hosting.YnVpbGQ.cache
 
 *.log
 .firebase/
