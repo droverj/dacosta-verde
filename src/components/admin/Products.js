@@ -7,9 +7,8 @@ import ChangeProductImage from './ChangeProductImage';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const [editProductId, setEditProductId] = useState(null);
-  const [deleteProductId, setDeleteProductId] = useState(null);
-  const [imageProductId, setImageProductId] = useState(null);
+  const [actionProductId, setActionProductId] = useState(null);
+  const [actionType, setActionType] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,55 +24,51 @@ const Products = () => {
     fetchProducts();
   }, []);
 
-  const handleEditClick = (productId) => {
-    setEditProductId(productId);
+  const handleAction = (productId, type) => {
+    setActionProductId(productId);
+    setActionType(type);
   };
 
-  const handleCloseEdit = () => {
-    setEditProductId(null);
-  };
-
-  const handleDeleteClick = (productId) => {
-    setDeleteProductId(productId);
-  };
-
-  const handleCloseDelete = () => {
-    setDeleteProductId(null);
-  };
-
-  const handleImageChange = (productId) => {
-    setImageProductId(productId);
-  };
-
-  const handleCloseImageChange = () => {
-    setImageProductId(null);
+  const handleCloseAction = () => {
+    setActionProductId(null);
+    setActionType(null);
   };
 
   return (
     <div className="product-list">
       <h2>All Products</h2>
       {products.length === 0 ? (
-        <p>No products available.</p>
-      ) : (
-        <ul>
-          {products.map((product) => (
-            <li key={product.id}>
-              <h3>{product.title}</h3>
-              <p>Price: ${product.price}</p>
-              <img src={product.image} alt={product.title} style={{ maxWidth: '100%', maxHeight: '150px' }} />
-              {/* Add other product details as needed */}
-              <button onClick={() => handleImageChange(product.id)}>Change Image</button>
-              <button onClick={() => handleEditClick(product.id)}>Edit</button>
-              <button onClick={() => handleDeleteClick(product.id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
-      )}
+  <p>No products available.</p>
+) : (
+  <ul>
+    {products.map((product) => (
+      <li key={product.id}>
+        {product.soldInBulk && <p>Bulk Discount</p>}
+        <h3>{product.title}</h3>
+        <p>Price: ${product.price}</p>{product.pricePerPound && <p>/lb.</p>}
+        {product.bulkPrice && <p>Bulk Price: ${product.bulkPrice}</p>}
+        
+        {product.averageWeight ? (
+          <p>Average weight: {product.weight} {product.weightUnit}</p>
+        ) : (
+          <p>Weight: {product.weight} {product.weightUnit}</p>
+        )}
+        
+        <img src={product.image} alt={product.title} style={{ maxWidth: '100%', maxHeight: '150px' }} />
+        <br />
+        <button onClick={() => handleAction(product.id, 'image')}>Change Image</button>
+        <button onClick={() => handleAction(product.id, 'edit')}>Edit</button>
+        <button onClick={() => handleAction(product.id, 'delete')}>Delete</button>
+      </li>
+    ))}
+  </ul>
+)}
 
-      {/* Render EditProduct component when editProductId is set */}
-      {imageProductId && <ChangeProductImage productId={imageProductId} onClose={handleCloseImageChange} />}
-      {editProductId && <EditProduct productId={editProductId} onClose={handleCloseEdit} />}
-      {deleteProductId && <DeleteProduct productId={deleteProductId} onClose={handleCloseDelete} />}
+
+      {/* Render appropriate component based on actionType */}
+      {actionType === 'image' && <ChangeProductImage productId={actionProductId} onClose={handleCloseAction} />}
+      {actionType === 'edit' && <EditProduct productId={actionProductId} onClose={handleCloseAction} />}
+      {actionType === 'delete' && <DeleteProduct productId={actionProductId} onClose={handleCloseAction} />}
     </div>
   );
 };
