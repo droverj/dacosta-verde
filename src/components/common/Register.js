@@ -103,6 +103,8 @@ const Register = ({ createAccount }) => {
             countries={['US', 'CA']}
             value={phoneNumber}
             onChange={setPhoneNumber}
+            maxLength='14'
+            minLength='11'
             required
           />
         </label>
