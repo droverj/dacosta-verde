@@ -1,109 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { uploadBytes, ref, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage, db } from '../../firebase-configs/firebase-config';
 
 const ChangeProductImage = ({ productId, onClose }) => {
-  const [product, setProduct] = useState({
-    title: '',
-    price: 0,
-    image: null,
-    oldImage: null,
-  });
+  const [image, setImage] = useState(null);
+  const [oldImagePath, setOldImagePath] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProductImage = async () => {
       const productDocRef = doc(db, 'products', productId);
       const productSnapshot = await getDoc(productDocRef);
       if (productSnapshot.exists()) {
         const productData = productSnapshot.data();
         const oldImage = productData.image || null;
-        setProduct({ ...productData, oldImage });
+        setOldImagePath(oldImage);
       }
     };
 
-    fetchProduct();
+    fetchProductImage();
   }, [productId]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: value,
-    }));
-  };
-
-  const handleUpdateDetails = async () => {
-    const productDocRef = doc(db, 'products', productId);
-
-    // Update the product without changing the image
-    await updateDoc(productDocRef, {
-      title: product.title,
-      price: product.price,
-      // Add other fields as needed
-    });
-
-    onClose(); // Close the edit modal or navigate back
-  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      image: file,
-    }));
+    setImage(file);
   };
 
   const handleUpdateImage = async () => {
-    const productDocRef = doc(db, 'products', productId);
+    if (image) {
+      setLoading(true);
 
-    if (product.image) {
-      // Upload the new image to Storage
-      const newImageRef = ref(storage, `product-images/${product.image.name}`);
-      await uploadBytes(newImageRef, product.image);
-      const newImageUrl = await getDownloadURL(newImageRef);
+      try {
+        // Upload the new image to Storage
+        const newImageRef = ref(storage, `product-images/${image.name}`);
+        await uploadBytes(newImageRef, image);
+        const newImageUrl = await getDownloadURL(newImageRef);
 
-      // Delete the old image from Storage (if it exists)
-      if (product.oldImage) {
-        const oldImageRef = ref(storage, product.oldImage);
-        deleteObject(oldImageRef)
-          .then(() => {
-            console.log('Old image deleted successfully');
-          })
-          .catch((error) => {
-            console.error('Error deleting old image:', error);
-          });
+        // Delete the old image from Storage (if it exists)
+        if (oldImagePath) {
+          const oldImageRef = ref(storage, oldImagePath);
+          await deleteObject(oldImageRef);
+          console.log('Old image deleted successfully');
+        }
+
+        // Update the product with the new image URL
+        const productDocRef = doc(db, 'products', productId);
+        await updateDoc(productDocRef, { image: newImageUrl, oldImage: newImageRef.fullPath });
+
+        onClose(); // Close the edit modal or navigate back
+      } catch (error) {
+        console.error('Error updating product image:', error);
+        // You can handle the error, e.g., show a user-friendly message
+      } finally {
+        setLoading(false);
       }
-
-      // Update the product with the new image URL
-      await updateDoc(productDocRef, { ...product, image: newImageUrl, oldImage: newImageRef.fullPath });
     }
-
-    onClose(); // Close the edit modal or navigate back
   };
 
   return (
     <div className="edit-product">
-      <h2>Edit Product</h2>
+      <h2>Edit Product Image</h2>
       <form>
-        <label>
-          Title:
-          <input type="text" name="title" value={product.title} onChange={handleInputChange} />
-        </label>
-        <label>
-          Price:
-          <input type="number" name="price" value={product.price} onChange={handleInputChange} />
-        </label>
-        {/* Add other input fields for additional product details */}
         <label>
           Product Image:
           <input type="file" accept="image/*" onChange={handleImageChange} />
         </label>
-        <button type="button" onClick={handleUpdateDetails}>
-          Update Details
+        <button type="button" onClick={handleUpdateImage} disabled={loading}>
+          {loading ? 'Updating Image...' : 'Update Image'}
         </button>
-        <button type="button" onClick={handleUpdateImage}>
-          Update Image
+        <button type="button" onClick={onClose} disabled={loading}>
+          Cancel
         </button>
       </form>
     </div>
