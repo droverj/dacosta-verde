@@ -3,11 +3,13 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase-configs/firebase-config';
 import EditProduct from './EditProduct';
 import DeleteProduct from './DeleteProduct';
+import ChangeProductImage from './ChangeProductImage';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [editProductId, setEditProductId] = useState(null);
   const [deleteProductId, setDeleteProductId] = useState(null);
+  const [imageProductId, setImageProductId] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -39,6 +41,14 @@ const Products = () => {
     setDeleteProductId(null);
   };
 
+  const handleImageChange = (productId) => {
+    setImageProductId(productId);
+  };
+
+  const handleCloseImageChange = () => {
+    setImageProductId(null);
+  };
+
   return (
     <div className="product-list">
       <h2>All Products</h2>
@@ -52,6 +62,7 @@ const Products = () => {
               <p>Price: ${product.price}</p>
               <img src={product.image} alt={product.title} style={{ maxWidth: '100%', maxHeight: '150px' }} />
               {/* Add other product details as needed */}
+              <button onClick={() => handleImageChange(product.id)}>Change Image</button>
               <button onClick={() => handleEditClick(product.id)}>Edit</button>
               <button onClick={() => handleDeleteClick(product.id)}>Delete</button>
             </li>
@@ -60,6 +71,7 @@ const Products = () => {
       )}
 
       {/* Render EditProduct component when editProductId is set */}
+      {imageProductId && <ChangeProductImage productId={imageProductId} onClose={handleCloseImageChange} />}
       {editProductId && <EditProduct productId={editProductId} onClose={handleCloseEdit} />}
       {deleteProductId && <DeleteProduct productId={deleteProductId} onClose={handleCloseDelete} />}
     </div>
