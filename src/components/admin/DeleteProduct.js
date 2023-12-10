@@ -27,10 +27,10 @@ const DeleteProduct = ({ productId, onClose }) => {
 
   const handleDeleteProduct = async () => {
     const productDocRef = doc(db, 'products', productId);
-  
+
     // Delete the product from the database
     await deleteDoc(productDocRef);
-  
+
     // Delete the product image from Storage (if it exists)
     if (product.oldImage) {  // Use product.oldImage instead of product.image.name
       const imageRef = ref(storage, product.oldImage);
@@ -42,10 +42,10 @@ const DeleteProduct = ({ productId, onClose }) => {
           console.error('Error deleting product image:', error);
         });
     }
-  
+
     onClose(); // Close the edit modal or navigate back
   };
-  
+
 
   return (
     <div className="delete-product">

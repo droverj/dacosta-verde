@@ -58,6 +58,9 @@ const EditProduct = ({ productId, onClose }) => {
         <button type="button" onClick={handleUpdateDetails}>
           Update Details
         </button>
+        <button type="button" onClick={onClose}>
+          Cancel
+        </button>
       </form>
     </div>
   );
