@@ -5,7 +5,7 @@ import Inventory from './Inventory';
 import Users from './Users';
 
 const Admin = () => {
-  const [pageView, setPageView] = useState('');
+  const [pageView, setPageView] = useState('Products');
 
   const renderPage = () => {
     switch (pageView) {
