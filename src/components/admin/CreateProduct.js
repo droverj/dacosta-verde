@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
 import { storage } from '../../firebase-configs/firebase-config';
+import HighlandCow from '../../images/highland-cow-cartoon.jpeg'
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
@@ -53,31 +54,28 @@ const CreateProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (product.title && product.price && imageUrl) {
-      // Add product to Firestore
-      const db = getFirestore();
-      const productsCollection = collection(db, 'products');
+    const db = getFirestore();
+    const productsCollection = collection(db, 'products');
 
-      try {
-        const docRef = await addDoc(productsCollection, {
-          title: product.title,
-          price: product.price,
-          image: imageUrl,
-        });
+    try {
+      const docRef = await addDoc(productsCollection, {
+        title: product.title,
+        price: product.price,
+        image: imageUrl || HighlandCow, // Use default image if imageUrl is null
+      });
 
-        console.log('Product added with ID:', docRef.id);
+      console.log('Product added with ID:', docRef.id);
 
-        // Clear form after submission
-        setProduct({
-          title: '',
-          price: '',
-        });
-        setSelectedImage(null);
-        setImageUrl(null);
-        setUploadProgress(0);
-      } catch (error) {
-        console.error('Error adding product:', error);
-      }
+      // Clear form after submission
+      setProduct({
+        title: '',
+        price: '',
+      });
+      setSelectedImage(null);
+      setImageUrl(null);
+      setUploadProgress(0);
+    } catch (error) {
+      console.error('Error adding product:', error);
     }
   };
 
@@ -110,6 +108,15 @@ const CreateProduct = () => {
         <button type="submit">Add Product</button>
       </form>
 
+      {/* Display default image if imageUrl is null */}
+      {!imageUrl && (
+        <div>
+          <p>Default Image</p>
+          <img src={HighlandCow} alt="Default" style={{ maxWidth: '100%', maxHeight: '300px' }} />
+        </div>
+      )}
+
+      {/* Display uploaded image if imageUrl is not null */}
       {imageUrl && (
         <div>
           <p>Image uploaded successfully!</p>
@@ -121,5 +128,3 @@ const CreateProduct = () => {
 };
 
 export default CreateProduct;
-
-
