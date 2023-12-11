@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
-import { addDoc, collection, getFirestore, doc as firestoreDoc } from 'firebase/firestore';
+import { addDoc, collection, setDoc, getFirestore, doc } from 'firebase/firestore';
 import { storage } from '../../firebase-configs/firebase-config';
 import HighlandCow from '../../images/highland-cow-cartoon.jpeg';
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
+    SKU: '',
     label: '',
     price: '',
     weight: '',
@@ -72,6 +73,7 @@ const CreateProduct = () => {
       const productDocRef = await addDoc(productsCollection, {
         label: product.label,
         price: product.price,
+        SKU: product.SKU,
         weight: product.weight,
         weightUnit: product.weightUnit,
         soldInBulk: product.soldInBulk,
@@ -82,19 +84,24 @@ const CreateProduct = () => {
         image: imageUrl || HighlandCow, // Use default image if imageUrl is null
       });
 
-      // Add the product to the inventory collection with the same document ID
-      await addDoc(inventoryCollection, {
-        id: productDocRef.id,
+      const productId = productDocRef.id; // Store the product ID
+
+      // Add the product to the inventory collection with the product ID as the document ID
+      await setDoc(doc(inventoryCollection, productId), {
+        SKU: product.SKU,
+        label: product.label,
+        price: product.price,
         unitsAvailable: 0,
         unitsSold: 0,
       });
 
-      console.log('Product added with ID:', productDocRef.id);
+      console.log('Product added with ID:', productId);
 
       // Clear form after submission
       setProduct({
         label: '',
         price: '',
+        SKU: '',
         weight: '',
         weightUnit: 'oz.',
         soldInBulk: false,
@@ -111,10 +118,15 @@ const CreateProduct = () => {
     }
   };
 
+
   return (
     <div className="create-product">
       <h2>Add Product</h2>
       <form onSubmit={handleSubmit}>
+        <label>
+          SKU:
+          <input type="number" name="SKU" value={product.SKU} onChange={handleInputChange} required />
+        </label>
         <label>
           Product Label:
           <input type="text" name="label" value={product.label} onChange={handleInputChange} required />

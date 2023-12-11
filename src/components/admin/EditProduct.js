@@ -4,6 +4,7 @@ import { db } from '../../firebase-configs/firebase-config';
 
 const EditProduct = ({ productId, onClose }) => {
   const [product, setProduct] = useState({
+    SKU: '',
     label: '',
     price: '',
     weight: '',
@@ -41,10 +42,15 @@ const EditProduct = ({ productId, onClose }) => {
   const handleUpdateDetails = async () => {
     const productDocRef = doc(db, 'products', productId);
 
+    // Fetch the existing product data
+    const productSnapshot = await getDoc(productDocRef);
+    const existingProductData = productSnapshot.data();
+
     // Update the product details without changing the image
     await updateDoc(productDocRef, {
       label: product.label,
       price: product.price,
+      SKU: product.SKU,
       weight: product.weight,
       weightUnit: product.weightUnit,
       soldInBulk: product.soldInBulk,
@@ -55,20 +61,34 @@ const EditProduct = ({ productId, onClose }) => {
       // Add other fields as needed
     });
 
+    // Update the corresponding entry in the inventory database
+    const inventoryDocRef = doc(db, 'inventory', productId);
+    await updateDoc(inventoryDocRef, {
+      label: product.label,
+      price: product.price,
+      SKU: product.SKU,
+      // Add other fields as needed
+    });
+
     onClose(); // Close the edit modal or navigate back
   };
+
 
   return (
     <div className="edit-product">
       <h2>Edit Product</h2>
       <form>
         <label>
+          SKU:
+          <input type="number" name="SKU" value={product.SKU} onChange={handleInputChange} />
+        </label>
+        <label>
           Product Label:
           <input type="text" name="label" value={product.label} onChange={handleInputChange} />
         </label>
         <label>
           Price: $
-          <input type="text" name="price" value={product.price} step="0.01" onChange={handleInputChange} />
+          <input type="number" name="price" value={product.price} step="0.01" onChange={handleInputChange} />
         </label>
         <label>
           Price is per pound

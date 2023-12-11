@@ -10,6 +10,7 @@ const Product = ({ product, onAction }) => {
     <li key={product.id}>
       {product.soldInBulk && <p>Bulk Discount</p>}
       <h3>{product.label}</h3>
+      <h3>SKU: {product.SKU}</h3>
       <p>Price: ${product.price}</p>{product.pricePerPound && <p>/lb.</p>}
       {product.bulkPrice && <p>Bulk Price: ${product.bulkPrice}</p>}
       {product.bulkPrice && product.pricePerPound ? (
