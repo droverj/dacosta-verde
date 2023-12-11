@@ -4,6 +4,7 @@ import { db } from '../../firebase-configs/firebase-config';
 
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -23,14 +24,29 @@ const Inventory = () => {
     fetchInventory();
   }, []);
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredInventory = inventory.filter((item) =>
+  item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  (item.SKU && item.SKU.toLowerCase().startsWith(searchQuery.toLowerCase()))
+);
+
   return (
     <div>
       <h2>Inventory</h2>
-      {inventory.length === 0 ? (
+      <input
+        type="text"
+        placeholder="Search by label or SKU..."
+        value={searchQuery}
+        onChange={handleSearch}
+      />
+      {filteredInventory.length === 0 ? (
         <p>No items in inventory.</p>
       ) : (
         <ul>
-          {inventory.map((item) => (
+          {filteredInventory.map((item) => (
             <li key={item.id}>
               <p>SKU: {item.SKU || 'N/A'}</p>
               <p>Label: {item.label || 'N/A'}</p>
