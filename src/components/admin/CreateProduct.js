@@ -14,6 +14,7 @@ const CreateProduct = () => {
     pricePerPound: false,
     averageWeight: false,
     bulkPrice: '',
+    bulkAmount: '',
   });
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -64,8 +65,10 @@ const CreateProduct = () => {
 
     const db = getFirestore();
     const productsCollection = collection(db, 'products');
+    const inventoryCollection = collection(db, 'inventory'); 
 
     try {
+      // Add the product to the "products" collection
       const docRef = await addDoc(productsCollection, {
         title: product.title,
         price: product.price,
@@ -75,10 +78,17 @@ const CreateProduct = () => {
         pricePerPound: product.pricePerPound,
         averageWeight: product.averageWeight,
         bulkPrice: product.soldInBulk ? product.bulkPrice : null,
+        bulkAmount: product.soldInBulk ? product.bulkAmount : null,
         image: imageUrl || HighlandCow, // Use default image if imageUrl is null
       });
 
       console.log('Product added with ID:', docRef.id);
+
+      // Add the corresponding inventory document
+      await addDoc(inventoryCollection, {
+        unitsAvailable: 0,
+        unitsSold: 0,
+      });
 
       // Clear form after submission
       setProduct({
@@ -90,6 +100,7 @@ const CreateProduct = () => {
         pricePerPound: false,
         averageWeight: false,
         bulkPrice: '',
+        bulkAmount: '',
       });
       setSelectedImage(null);
       setImageUrl(null);
@@ -108,8 +119,8 @@ const CreateProduct = () => {
           <input type="text" name="title" value={product.title} onChange={handleInputChange} required />
         </label>
         <label>
-          Price:
-          <input type="text" name="price" value={product.price} onChange={handleInputChange} required />
+          Price: $
+          <input type="number" name="price" value={product.price} step="0.01" onChange={handleInputChange} required />
         </label>
         <label>
           Price is per pound
@@ -121,13 +132,12 @@ const CreateProduct = () => {
         </label>
         <label>
           Weight:
-          <input type="number" name="weight" value={product.weight} onChange={handleInputChange} />
+          <input type="number" name="weight" value={product.weight} step="0.01" onChange={handleInputChange} />
         </label>
         <label>
-          Weight Unit:
           <select name="weightUnit" value={product.weightUnit} onChange={handleInputChange}>
             <option value="oz.">oz.</option>
-            <option value="Lbs.">Lbs.</option>
+            <option value="lbs">lbs</option>
           </select>
         </label>
         <label>
@@ -135,10 +145,16 @@ const CreateProduct = () => {
           <input type="checkbox" name="soldInBulk" checked={product.soldInBulk} onChange={handleInputChange} />
         </label>
         {product.soldInBulk && (
-          <label>
-            Bulk Price:
-            <input type="text" name="bulkPrice" value={product.bulkPrice} onChange={handleInputChange} />
-          </label>
+          <>
+            <label>
+              Bulk Price: $
+              <input type="number" name="bulkPrice" value={product.bulkPrice} step="0.01" onChange={handleInputChange} />
+            </label>
+            <label>
+              Bulk Amount:
+              <input type="number" name="bulkAmount" value={product.bulkAmount} onChange={handleInputChange} />
+            </label>
+          </>
         )}
         <label>
           Product Image:

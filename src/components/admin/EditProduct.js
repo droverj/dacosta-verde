@@ -12,6 +12,7 @@ const EditProduct = ({ productId, onClose }) => {
     pricePerPound: false,
     averageWeight: false,
     bulkPrice: '',
+    bulkAmount: '',
   });
 
   useEffect(() => {
@@ -50,6 +51,7 @@ const EditProduct = ({ productId, onClose }) => {
       averageWeight: product.averageWeight,
       pricePerPound: product.pricePerPound,
       bulkPrice: product.soldInBulk ? product.bulkPrice : null,
+      bulkAmount: product.soldInBulk ? product.bulkAmount : null,
       // Add other fields as needed
     });
 
@@ -65,8 +67,8 @@ const EditProduct = ({ productId, onClose }) => {
           <input type="text" name="title" value={product.title} onChange={handleInputChange} />
         </label>
         <label>
-          Price:
-          <input type="text" name="price" value={product.price} onChange={handleInputChange} />
+          Price: $
+          <input type="text" name="price" value={product.price} step="0.01" onChange={handleInputChange} />
         </label>
         <label>
           Price is per pound
@@ -78,13 +80,12 @@ const EditProduct = ({ productId, onClose }) => {
         </label>
         <label>
           Weight:
-          <input type="number" name="weight" value={product.weight} onChange={handleInputChange} />
+          <input type="number" name="weight" value={product.weight} step="0.01" onChange={handleInputChange} />
         </label>
         <label>
-          Weight Unit:
           <select name="weightUnit" value={product.weightUnit} onChange={handleInputChange}>
             <option value="oz.">oz.</option>
-            <option value="Lbs.">Lbs.</option>
+            <option value="lbs">lbs</option>
           </select>
         </label>
         <label>
@@ -92,10 +93,16 @@ const EditProduct = ({ productId, onClose }) => {
           <input type="checkbox" name="soldInBulk" checked={product.soldInBulk} onChange={handleInputChange} />
         </label>
         {product.soldInBulk && (
-          <label>
-            Bulk Price:
-            <input type="text" name="bulkPrice" value={product.bulkPrice} onChange={handleInputChange} />
-          </label>
+          <>
+            <label>
+              Bulk Price: $
+              <input type="number" name="bulkPrice" value={product.bulkPrice} step="0.01" onChange={handleInputChange} />
+            </label>
+            <label>
+              Bulk Amount:
+              <input type="number" name="bulkAmount" value={product.bulkAmount} onChange={handleInputChange} />
+            </label>
+          </>
         )}
         {/* Add other input fields for additional product details */}
         <button type="button" onClick={handleUpdateDetails}>
