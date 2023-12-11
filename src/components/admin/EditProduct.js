@@ -43,8 +43,8 @@ const EditProduct = ({ productId, onClose }) => {
     const productDocRef = doc(db, 'products', productId);
 
     // Fetch the existing product data
-    const productSnapshot = await getDoc(productDocRef);
-    const existingProductData = productSnapshot.data();
+    // const productSnapshot = await getDoc(productDocRef);
+    // const existingProductData = productSnapshot.data();
 
     // Update the product details without changing the image
     await updateDoc(productDocRef, {
