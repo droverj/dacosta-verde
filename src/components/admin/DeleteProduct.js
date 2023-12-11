@@ -27,25 +27,27 @@ const DeleteProduct = ({ productId, onClose }) => {
 
   const handleDeleteProduct = async () => {
     const productDocRef = doc(db, 'products', productId);
+    const inventoryDocRef = doc(db, 'inventory', productId); // Reference to the corresponding inventory document
 
-    // Delete the product from the database
-    await deleteDoc(productDocRef);
+    try {
+      // Delete the product from the products collection
+      await deleteDoc(productDocRef);
 
-    // Delete the product image from Storage (if it exists)
-    if (product.oldImage) {  // Use product.oldImage instead of product.image.name
-      const imageRef = ref(storage, product.oldImage);
-      deleteObject(imageRef)
-        .then(() => {
-          console.log('Product image deleted successfully');
-        })
-        .catch((error) => {
-          console.error('Error deleting product image:', error);
-        });
+      // Delete the product from the inventory collection
+      await deleteDoc(inventoryDocRef);
+
+      // Delete the product image from Storage (if it exists)
+      if (product.oldImage) {
+        const imageRef = ref(storage, product.oldImage);
+        await deleteObject(imageRef);
+        console.log('Product image deleted successfully');
+      }
+
+      onClose(); // Close the edit modal or navigate back
+    } catch (error) {
+      console.error('Error deleting product:', error);
     }
-
-    onClose(); // Close the edit modal or navigate back
   };
-
 
   return (
     <div className="delete-product">
