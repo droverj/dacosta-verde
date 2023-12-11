@@ -1,10 +1,13 @@
+// Inventory.js
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase-configs/firebase-config';
+import UpdateInventory from './UpdateInventory';
 
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [editItemId, setEditItemId] = useState(null);
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -28,9 +31,30 @@ const Inventory = () => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredInventory = inventory.filter((item) =>
-    item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (item.SKU && item.SKU.toLowerCase().startsWith(searchQuery.toLowerCase()))
+  const startEdit = (itemId) => {
+    setEditItemId(itemId);
+  };
+
+  const cancelEdit = () => {
+    setEditItemId(null);
+  };
+
+  const handleUpdate = async (itemId, newUnitsAvailable) => {
+    // Update local state with the new value
+    setInventory((prevInventory) =>
+      prevInventory.map((item) =>
+        item.id === itemId ? { ...item, unitsAvailable: newUnitsAvailable } : item
+      )
+    );
+
+    // Reset edit state
+    cancelEdit();
+  };
+
+  const filteredInventory = inventory.filter(
+    (item) =>
+      item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.SKU && item.SKU.toLowerCase().startsWith(searchQuery.toLowerCase()))
   );
 
   return (
@@ -51,8 +75,20 @@ const Inventory = () => {
               <p>SKU: {item.SKU || 'N/A'}</p>
               <p>Label: {item.label || 'N/A'}</p>
               <p>Price: {item.price || 'N/A'}</p>
-              <p>Units Available: {item.unitsAvailable}</p>
+              <p>
+                Units Available: {item.unitsAvailable}{' '}
+                <button onClick={() => startEdit(item.id)}>Update</button>
+              </p>
               <p>Units Sold: {item.unitsSold}</p>
+
+              {/* Edit form */}
+              {editItemId === item.id && (
+                <UpdateInventory
+                  itemId={item.id}
+                  onCancel={cancelEdit}
+                  onUpdate={handleUpdate}
+                />
+              )}
             </li>
           ))}
         </ul>
