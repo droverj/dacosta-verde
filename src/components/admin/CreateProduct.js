@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
-import { addDoc, collection, getFirestore } from 'firebase/firestore';
+import { addDoc, collection, getFirestore, doc as firestoreDoc } from 'firebase/firestore';
 import { storage } from '../../firebase-configs/firebase-config';
 import HighlandCow from '../../images/highland-cow-cartoon.jpeg';
 
@@ -65,11 +65,11 @@ const CreateProduct = () => {
 
     const db = getFirestore();
     const productsCollection = collection(db, 'products');
-    const inventoryCollection = collection(db, 'inventory'); 
+    const inventoryCollection = collection(db, 'inventory');
 
     try {
-      // Add the product to the "products" collection
-      const docRef = await addDoc(productsCollection, {
+      // Add the product to the products collection
+      const productDocRef = await addDoc(productsCollection, {
         title: product.title,
         price: product.price,
         weight: product.weight,
@@ -82,13 +82,14 @@ const CreateProduct = () => {
         image: imageUrl || HighlandCow, // Use default image if imageUrl is null
       });
 
-      console.log('Product added with ID:', docRef.id);
-
-      // Add the corresponding inventory document
+      // Add the product to the inventory collection with the same document ID
       await addDoc(inventoryCollection, {
+        id: productDocRef.id,
         unitsAvailable: 0,
         unitsSold: 0,
       });
+
+      console.log('Product added with ID:', productDocRef.id);
 
       // Clear form after submission
       setProduct({
