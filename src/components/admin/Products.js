@@ -1,6 +1,8 @@
+// Products.js
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase-configs/firebase-config';
+import Product from './Product';
 import EditProduct from './EditProduct';
 import DeleteProduct from './DeleteProduct';
 import ChangeProductImage from './ChangeProductImage';
@@ -42,34 +44,10 @@ const Products = () => {
       ) : (
         <ul>
           {products.map((product) => (
-            <li key={product.id}>
-              {product.soldInBulk && <p>Bulk Discount</p>}
-              <h3>{product.title}</h3>
-              <p>Price: ${product.price}</p>{product.pricePerPound && <p>/lb.</p>}
-              {product.bulkPrice && <p>Bulk Price: ${product.bulkPrice}</p>}{product.pricePerPound && <p>/lb.</p>}
-
-              {product.averageWeight ? (
-                <p>Average weight: {product.weight} {product.weightUnit} per package.</p>
-              ) : product.weight ? (
-                <p>Weight: {product.weight} {product.weightUnit}</p>
-              ) : null}
-
-              {product.soldInBulk && product.weight ? (
-                <p>{product.bulkAmount} x {product.weight} {product.weightUnit} package.</p>
-              ) : product.soldInBulk ? (
-                <p>{product.bulkAmount} packages.</p>
-              ) : null}
-
-              <img src={product.image} alt={product.title} style={{ maxWidth: '100%', maxHeight: '150px' }} />
-              <br />
-              <button onClick={() => handleAction(product.id, 'image')}>Change Image</button>
-              <button onClick={() => handleAction(product.id, 'edit')}>Edit</button>
-              <button onClick={() => handleAction(product.id, 'delete')}>Delete</button>
-            </li>
+            <Product key={product.id} product={product} onAction={handleAction} />
           ))}
         </ul>
       )}
-
 
       {/* Render appropriate component based on actionType */}
       {actionType === 'image' && <ChangeProductImage productId={actionProductId} onClose={handleCloseAction} />}
