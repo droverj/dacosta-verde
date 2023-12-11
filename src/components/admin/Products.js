@@ -1,4 +1,3 @@
-// Products.js
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase-configs/firebase-config';
@@ -11,6 +10,7 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [actionProductId, setActionProductId] = useState(null);
   const [actionType, setActionType] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,14 +36,29 @@ const Products = () => {
     setActionType(null);
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (product.SKU && product.SKU.toLowerCase().startsWith(searchQuery.toLowerCase()))
+  );
+
   return (
     <div className="product-list">
       <h2>All Products</h2>
-      {products.length === 0 ? (
+      <input
+        type="text"
+        placeholder="Search by label or SKU..."
+        value={searchQuery}
+        onChange={handleSearch}
+      />
+      {filteredProducts.length === 0 ? (
         <p>No products available.</p>
       ) : (
         <ul>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <Product key={product.id} product={product} onAction={handleAction} />
           ))}
         </ul>

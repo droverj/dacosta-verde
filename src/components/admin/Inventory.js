@@ -29,9 +29,9 @@ const Inventory = () => {
   };
 
   const filteredInventory = inventory.filter((item) =>
-  item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  (item.SKU && item.SKU.toLowerCase().startsWith(searchQuery.toLowerCase()))
-);
+    item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (item.SKU && item.SKU.toLowerCase().startsWith(searchQuery.toLowerCase()))
+  );
 
   return (
     <div>
