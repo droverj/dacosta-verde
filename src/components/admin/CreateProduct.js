@@ -6,7 +6,7 @@ import HighlandCow from '../../images/highland-cow-cartoon.jpeg';
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
-    title: '',
+    label: '',
     price: '',
     weight: '',
     weightUnit: 'oz.',
@@ -70,7 +70,7 @@ const CreateProduct = () => {
     try {
       // Add the product to the products collection
       const productDocRef = await addDoc(productsCollection, {
-        title: product.title,
+        label: product.label,
         price: product.price,
         weight: product.weight,
         weightUnit: product.weightUnit,
@@ -93,7 +93,7 @@ const CreateProduct = () => {
 
       // Clear form after submission
       setProduct({
-        title: '',
+        label: '',
         price: '',
         weight: '',
         weightUnit: 'oz.',
@@ -116,8 +116,8 @@ const CreateProduct = () => {
       <h2>Add Product</h2>
       <form onSubmit={handleSubmit}>
         <label>
-          Title:
-          <input type="text" name="title" value={product.title} onChange={handleInputChange} required />
+          Product Label:
+          <input type="text" name="label" value={product.label} onChange={handleInputChange} required />
         </label>
         <label>
           Price: $

@@ -5,7 +5,7 @@ import { storage, db } from '../../firebase-configs/firebase-config';
 
 const DeleteProduct = ({ productId, onClose }) => {
   const [product, setProduct] = useState({
-    title: '',
+    label: '',
     price: 0,
     image: null,
     oldImage: null,

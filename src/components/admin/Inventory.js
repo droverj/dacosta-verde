@@ -22,7 +22,7 @@ const Inventory = () => {
         if (productDocSnapshot.exists()) {
           const productData = productDocSnapshot.data();
           // Include product details in the inventory item
-          inventoryItem.title = productData.title || 'N/A';
+          inventoryItem.label = productData.label || 'N/A';
           inventoryItem.price = productData.price || 'N/A';
           inventoryItem.weight = productData.weight || 'N/A';
           inventoryItem.weightUnit = productData.weightUnit || 'N/A';
@@ -49,7 +49,7 @@ const Inventory = () => {
           {inventory.map((item) => (
             <li key={item.id}>
               <p>ID: {item.id}</p>
-              <p>Title: {item.title}</p>
+              <p>Product: {item.label}</p>
               <p>Price: {item.price}</p>
               <p>Weight: {item.weight}</p>
               <p>Weight Unit: {item.weightUnit}</p>

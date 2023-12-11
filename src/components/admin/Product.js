@@ -9,7 +9,7 @@ const Product = ({ product, onAction }) => {
   return (
     <li key={product.id}>
       {product.soldInBulk && <p>Bulk Discount</p>}
-      <h3>{product.title}</h3>
+      <h3>{product.label}</h3>
       <p>Price: ${product.price}</p>{product.pricePerPound && <p>/lb.</p>}
       {product.bulkPrice && <p>Bulk Price: ${product.bulkPrice}</p>}
       {product.bulkPrice && product.pricePerPound ? (
@@ -28,7 +28,7 @@ const Product = ({ product, onAction }) => {
         <p>{product.bulkAmount} packages.</p>
       ) : null}
 
-      <img src={product.image} alt={product.title} style={{ maxWidth: '100%', maxHeight: '150px' }} />
+      <img src={product.image} alt={product.label} style={{ maxWidth: '100%', maxHeight: '150px' }} />
       <br />
       <button onClick={() => handleAction('image')}>Change Image</button>
       <button onClick={() => handleAction('edit')}>Edit</button>

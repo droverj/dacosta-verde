@@ -4,7 +4,7 @@ import { db } from '../../firebase-configs/firebase-config';
 
 const EditProduct = ({ productId, onClose }) => {
   const [product, setProduct] = useState({
-    title: '',
+    label: '',
     price: '',
     weight: '',
     weightUnit: 'oz.',
@@ -43,7 +43,7 @@ const EditProduct = ({ productId, onClose }) => {
 
     // Update the product details without changing the image
     await updateDoc(productDocRef, {
-      title: product.title,
+      label: product.label,
       price: product.price,
       weight: product.weight,
       weightUnit: product.weightUnit,
@@ -63,8 +63,8 @@ const EditProduct = ({ productId, onClose }) => {
       <h2>Edit Product</h2>
       <form>
         <label>
-          Title:
-          <input type="text" name="title" value={product.title} onChange={handleInputChange} />
+          Product Label:
+          <input type="text" name="label" value={product.label} onChange={handleInputChange} />
         </label>
         <label>
           Price: $
