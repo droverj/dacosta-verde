@@ -80,7 +80,7 @@ const EditProduct = ({ productId, onClose }) => {
       <form>
         <label>
           SKU:
-          <input type="number" name="SKU" value={product.SKU} onChange={handleInputChange} />
+          <input type="text" name="SKU" value={product.SKU} onChange={handleInputChange} />
         </label>
         <label>
           Product Label:

@@ -3,6 +3,7 @@ import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
 import { addDoc, collection, setDoc, getFirestore, doc } from 'firebase/firestore';
 import { storage } from '../../firebase-configs/firebase-config';
 import HighlandCow from '../../images/highland-cow-cartoon.jpeg';
+import '../../styles/CreateProduct.scss';
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
@@ -125,7 +126,7 @@ const CreateProduct = () => {
       <form onSubmit={handleSubmit}>
         <label>
           SKU:
-          <input type="number" name="SKU" value={product.SKU} onChange={handleInputChange} required />
+          <input type="text" name="SKU" value={product.SKU} onChange={handleInputChange} required />
         </label>
         <label>
           Product Label:
