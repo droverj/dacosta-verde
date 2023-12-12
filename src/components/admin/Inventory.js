@@ -1,6 +1,6 @@
 // Inventory.js
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase-configs/firebase-config';
 import UpdateInventory from './UpdateInventory';
 
@@ -85,6 +85,7 @@ const Inventory = () => {
               {editItemId === item.id && (
                 <UpdateInventory
                   itemId={item.id}
+                  currentUnits={item.unitsAvailable}
                   onCancel={cancelEdit}
                   onUpdate={handleUpdate}
                 />

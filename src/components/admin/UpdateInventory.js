@@ -3,20 +3,26 @@ import React, { useState } from 'react';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase-configs/firebase-config';
 
-const UpdateInventory = ({ itemId, onCancel, onUpdate }) => {
+const UpdateInventory = ({ itemId, currentUnits, onCancel, onUpdate }) => {
   const [newUnitsAvailable, setNewUnitsAvailable] = useState('');
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (action) => {
     if (newUnitsAvailable !== '') {
       const inventoryRef = doc(db, 'inventory', itemId);
 
       try {
+        // Perform the action based on the parameter
+        const updatedUnits =
+          action === 'increase'
+            ? currentUnits + parseInt(newUnitsAvailable, 10)
+            : currentUnits - parseInt(newUnitsAvailable, 10);
+
         await updateDoc(inventoryRef, {
-          unitsAvailable: parseInt(newUnitsAvailable, 10),
+          unitsAvailable: updatedUnits,
         });
 
         // Trigger parent component update callback with the new value
-        onUpdate(itemId, parseInt(newUnitsAvailable, 10));
+        onUpdate(itemId, updatedUnits);
       } catch (error) {
         console.error('Error updating units available:', error);
       }
@@ -25,6 +31,7 @@ const UpdateInventory = ({ itemId, onCancel, onUpdate }) => {
 
   return (
     <form>
+      <p>Current Units Available: {currentUnits}</p>
       <label>
         New Units Available:
         <input
@@ -33,8 +40,11 @@ const UpdateInventory = ({ itemId, onCancel, onUpdate }) => {
           onChange={(e) => setNewUnitsAvailable(e.target.value)}
         />
       </label>
-      <button type="button" onClick={handleUpdate}>
-        Update
+      <button type="button" onClick={() => handleUpdate('increase')}>
+        Add
+      </button>
+      <button type="button" onClick={() => handleUpdate('decrease')}>
+        Remove
       </button>
       <button type="button" onClick={onCancel}>
         Cancel

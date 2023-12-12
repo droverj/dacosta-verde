@@ -1,3 +1,5 @@
+// Navbar.scss
+
 nav {
   height: 60px;
   background-color: #fff;
@@ -11,6 +13,11 @@ nav {
   width: 100%;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    padding: 0 10px;
+    height: 100px;
+  }
 }
 
 .main-pages-container {
@@ -18,21 +25,25 @@ nav {
   align-items: center;
   width: 100%;
   justify-content: space-between;
-}
 
-h1 {
-  a {
-    margin: 0;
-    font-size: 1.5rem;
-    color: grey;
-    text-decoration: none;
-    font-variant: small-caps;
+  h1 {
+    a {
+      margin: 0;
+      font-size: 1.5rem;
+      color: grey;
+      text-decoration: none;
+      font-variant: small-caps;
+    }
   }
-}
 
-.page-links {
-  display: flex;
-  margin-left: auto;
+  .page-links {
+    display: flex;
+    margin-left: auto;
+
+    @media (max-width: 600px) {
+      flex-direction: column; // Hide page links on small screens
+    }
+  }
 }
 
 .page-links a {
@@ -44,6 +55,12 @@ h1 {
 .user-links {
   display: flex;
   align-items: center;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
 }
 
 .user-links a {
@@ -69,9 +86,7 @@ button:hover {
   cursor: pointer;
 }
 
-.admin-link {
-  a {
-    color: blue;
-    margin-left: 10px;
-  }
+.admin-link a {
+  color: blue;
+  margin-left: 10px;
 }
