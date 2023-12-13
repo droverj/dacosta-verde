@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { useCart } from '../hooks/CartContext';
-import { fetchProductDetails } from '../utilities/fetchProductDetails'; 
+import { fetchProductDetails } from '../utilities/fetchProductDetails';
 
 const ShopItem = ({ product }) => {
   // const { addToCart } = useCart();
-  const { addItem } = useCart();
-  
+  const { addItem, removeItem } = useCart();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddToCart = () => {
-    // Replace this with the actual item details
-    const newItem = { id: product.id };
-    addItem(newItem);
+    const item = { id: product.id };
+    addItem(item);
+  };
+
+  const handleRemoveFromCart = () => {
+    removeItem(product.id);
   };
 
   return (
@@ -42,6 +45,13 @@ const ShopItem = ({ product }) => {
         disabled={isLoading}
       >
         {isLoading ? 'Adding to Cart...' : 'Add to Cart'}
+      </button>
+
+      <button
+        onClick={() => handleRemoveFromCart(product.id)}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Removing from Cart...' : 'Remove from Cart'}
       </button>
     </li>
   );

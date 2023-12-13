@@ -61,6 +61,15 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  const removeItem = (itemId) => {
+    setCart((prevCart) => {
+      const updatedItems = prevCart.items.filter((item) => item.id !== itemId);
+      const updatedCart = { ...prevCart, items: updatedItems };
+      user && updateFirestoreCart(user.uid, updatedItems);
+      return updatedCart;
+    });
+  };
+
   // Asynchronous function to update Firestore document
   const updateFirestoreCart = async (userId, items) => {
     const userDocRef = doc(db, 'carts', userId);
@@ -83,6 +92,7 @@ export const CartProvider = ({ children }) => {
       value={{
         cart: cart.items,
         addItem,
+        removeItem,
         getTotalItems,
       }}
     >
