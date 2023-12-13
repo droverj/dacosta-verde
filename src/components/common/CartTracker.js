@@ -6,13 +6,11 @@ import { useCart } from '../../hooks/CartContext';
 import '../../styles/CartTracker.scss';
 
 const CartTracker = () => {
-  const { cart } = useCart();
-  // const { totalItems } = useCart();
-  const totalItems = cart.length;
+  const { getTotalItems } = useCart();
 
   return (
     <div className="cart-tracker">
-      <span className="cart-count">{totalItems}</span>
+      <span className="cart-count">{getTotalItems()}</span>
       <Link to="/cart">
         <FontAwesomeIcon icon={faTractor} className="cart-icon" style={{ color: 'red' }} size="2x" />
       </Link>

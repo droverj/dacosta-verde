@@ -45,39 +45,45 @@ export const CartProvider = ({ children }) => {
     fetchCartData();
   }, [user]);
 
-// Function to add an item to the cart
-const addItem = (item) => {
-  setCart((prevCart) => {
-    const existingItem = prevCart.items.find((cartItem) => cartItem.id === item.id);
-    const updatedItems = existingItem
-      ? prevCart.items.map((cartItem) =>
-          cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-        )
-      : [...prevCart.items, { ...item, quantity: 1 }];
+  // Function to add an item to the cart
+  const addItem = (item) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.items.find((cartItem) => cartItem.id === item.id);
+      const updatedItems = existingItem
+        ? prevCart.items.map((cartItem) =>
+            cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+          )
+        : [...prevCart.items, { ...item, quantity: 1 }];
 
-    const updatedCart = { ...prevCart, items: updatedItems };
-    user && updateFirestoreCart(user.uid, updatedItems);
-    return updatedCart;
-  });
-};
+      const updatedCart = { ...prevCart, items: updatedItems };
+      user && updateFirestoreCart(user.uid, updatedItems);
+      return updatedCart;
+    });
+  };
 
-// Asynchronous function to update Firestore document
-const updateFirestoreCart = async (userId, items) => {
-  const userDocRef = doc(db, 'carts', userId);
+  // Asynchronous function to update Firestore document
+  const updateFirestoreCart = async (userId, items) => {
+    const userDocRef = doc(db, 'carts', userId);
 
-  try {
-    // Use setDoc to update only the 'items' field in the Firestore document
-    await setDoc(userDocRef, { items }, { merge: true });
-  } catch (error) {
-    console.error('Error updating cart data in Firestore:', error);
-  }
-};
+    try {
+      // Use setDoc to update only the 'items' field in the Firestore document
+      await setDoc(userDocRef, { items }, { merge: true });
+    } catch (error) {
+      console.error('Error updating cart data in Firestore:', error);
+    }
+  };
+
+  // Function to get the total number of items in the cart
+  const getTotalItems = () => {
+    return cart.items.reduce((total, item) => total + item.quantity, 0);
+  };
 
   return (
     <CartContext.Provider
       value={{
         cart: cart.items,
         addItem,
+        getTotalItems,
       }}
     >
       {children}
