@@ -45,17 +45,33 @@ export const CartProvider = ({ children }) => {
     fetchCartData();
   }, [user]);
 
-  // Function to add an item to the cart
-  const addItem = (item) => {
-    setCart((prevCart) => {
-      const updatedCart = { ...prevCart, items: [...prevCart.items, item] };
-      if (user) {
-        const userDocRef = doc(db, 'carts', user.uid);
-        setDoc(userDocRef, updatedCart); // Update the cart in Firestore
-      }
-      return updatedCart;
-    });
-  };
+// Function to add an item to the cart
+const addItem = (item) => {
+  setCart((prevCart) => {
+    const existingItem = prevCart.items.find((cartItem) => cartItem.id === item.id);
+    const updatedItems = existingItem
+      ? prevCart.items.map((cartItem) =>
+          cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+        )
+      : [...prevCart.items, { ...item, quantity: 1 }];
+
+    const updatedCart = { ...prevCart, items: updatedItems };
+    user && updateFirestoreCart(user.uid, updatedItems);
+    return updatedCart;
+  });
+};
+
+// Asynchronous function to update Firestore document
+const updateFirestoreCart = async (userId, items) => {
+  const userDocRef = doc(db, 'carts', userId);
+
+  try {
+    // Use setDoc to update only the 'items' field in the Firestore document
+    await setDoc(userDocRef, { items }, { merge: true });
+  } catch (error) {
+    console.error('Error updating cart data in Firestore:', error);
+  }
+};
 
   return (
     <CartContext.Provider
