@@ -2,7 +2,7 @@ import React from 'react';
 import { useCart } from '../hooks/CartContext';
 
 const ShopItem = ({ product }) => {
-  const { addItem, removeItem } = useCart();
+  const { addItem, decrementItem, deleteItem } = useCart();
 
   const handleAddToCart = () => {
     const item = { id: product.id };
@@ -10,8 +10,13 @@ const ShopItem = ({ product }) => {
   };
 
   const handleRemoveFromCart = () => {
-    removeItem(product.id);
+    deleteItem(product.id);
   };
+
+  const handleReduceFromCart = () => {
+    decrementItem(product.id);
+  };
+
 
   return (
     <li key={product.id}>
@@ -40,6 +45,12 @@ const ShopItem = ({ product }) => {
         onClick={handleAddToCart}
       >
         Add to Cart
+      </button>
+
+      <button
+        onClick={handleReduceFromCart}
+      >
+        Reduce Item from Cart
       </button>
 
       <button

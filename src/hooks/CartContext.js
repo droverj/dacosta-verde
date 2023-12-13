@@ -61,9 +61,23 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  const removeItem = (itemId) => {
+  const deleteItem = (itemId) => {
     setCart((prevCart) => {
       const updatedItems = prevCart.items.filter((item) => item.id !== itemId);
+      const updatedCart = { ...prevCart, items: updatedItems };
+      user && updateFirestoreCart(user.uid, updatedItems);
+      return updatedCart;
+    });
+  };
+
+  const decrementItem = (itemId) => {
+    setCart((prevCart) => {
+      const updatedItems = prevCart.items.map((cartItem) =>
+        cartItem.id === itemId
+          ? { ...cartItem, quantity: Math.max(1, cartItem.quantity - 1) }
+          : cartItem
+      );
+
       const updatedCart = { ...prevCart, items: updatedItems };
       user && updateFirestoreCart(user.uid, updatedItems);
       return updatedCart;
@@ -92,7 +106,8 @@ export const CartProvider = ({ children }) => {
       value={{
         cart: cart.items,
         addItem,
-        removeItem,
+        deleteItem,
+        decrementItem,
         getTotalItems,
       }}
     >
