@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTractor } from '@fortawesome/free-solid-svg-icons';
+import { useCart } from '../../hooks/CartContext';
 import '../../styles/CartTracker.scss';
-// import { useCart } from './CartContext';
 
 const CartTracker = () => {
+  const { cart } = useCart();
   // const { totalItems } = useCart();
-  const totalItems = 0;
+  const totalItems = cart.length;
 
   return (
     <div className="cart-tracker">

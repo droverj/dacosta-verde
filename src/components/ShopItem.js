@@ -1,21 +1,27 @@
-// Product.js
-import React from 'react';
+import React, { useState } from 'react';
+import { useCart } from '../hooks/CartContext';
+import { fetchProductDetails } from '../utilities/fetchProductDetails'; 
 
-const ShopItem = ({ product, onAction }) => {
+const ShopItem = ({ product }) => {
+  // const { addToCart } = useCart();
+  const { addItem } = useCart();
   
-  const handleAddItem = (item) => {
+  const [isLoading, setIsLoading] = useState(false);
 
+  const handleAddToCart = () => {
+    // Replace this with the actual item details
+    const newItem = { id: product.id };
+    addItem(newItem);
   };
 
   return (
     <li key={product.id}>
       {product.soldInBulk && <p>Bulk Discount</p>}
       <h3>{product.label}</h3>
-      <p>Price: ${product.price}</p>{product.pricePerPound && <p>/lb.</p>}
+      <p>Price: ${product.price}</p>
+      {product.pricePerPound && <p>/lb.</p>}
       {product.bulkPrice && <p>Bulk Price: ${product.bulkPrice}</p>}
-      {product.bulkPrice && product.pricePerPound ? (
-        <p>/lb.</p>
-      ) : null}
+      {product.bulkPrice && product.pricePerPound ? <p>/lb.</p> : null}
 
       {product.averageWeight ? (
         <p>Average weight: {product.weight} {product.weightUnit} per package.</p>
@@ -31,7 +37,12 @@ const ShopItem = ({ product, onAction }) => {
 
       <img src={product.image} alt={product.label} style={{ maxWidth: '100%', maxHeight: '150px' }} />
       <br />
-      <button onClick={() => handleAddItem()}>Add to Cart</button>
+      <button
+        onClick={() => handleAddToCart(product.id)}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Adding to Cart...' : 'Add to Cart'}
+      </button>
     </li>
   );
 };
