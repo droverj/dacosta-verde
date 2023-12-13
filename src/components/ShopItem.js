@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useCart } from '../hooks/CartContext';
-import { fetchProductDetails } from '../utilities/fetchProductDetails';
 
 const ShopItem = ({ product }) => {
-  // const { addToCart } = useCart();
   const { addItem, removeItem } = useCart();
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddToCart = () => {
     const item = { id: product.id };
@@ -41,17 +37,15 @@ const ShopItem = ({ product }) => {
       <img src={product.image} alt={product.label} style={{ maxWidth: '100%', maxHeight: '150px' }} />
       <br />
       <button
-        onClick={() => handleAddToCart(product.id)}
-        disabled={isLoading}
+        onClick={handleAddToCart}
       >
-        {isLoading ? 'Adding to Cart...' : 'Add to Cart'}
+        Add to Cart
       </button>
 
       <button
-        onClick={() => handleRemoveFromCart(product.id)}
-        disabled={isLoading}
+        onClick={handleRemoveFromCart}
       >
-        {isLoading ? 'Removing from Cart...' : 'Remove from Cart'}
+        Remove from Cart
       </button>
     </li>
   );
