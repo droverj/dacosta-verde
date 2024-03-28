@@ -1,7 +1,22 @@
-@import '_variables';
+@import "_variables";
 
 .Header {
-  background-color: $farmhouse-red;
-  height: 300px;
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 30px $farmhouse-red solid;
+  margin-bottom: 10px;
+  height: 200px;
+  color: #333;
+  font-size: 2rem;
+
+  h1 {
+    font-variant: small-caps;
+  }
+  
+  h3 {
+    font-family: "Montserrat";
+    font-weight: 100;
+    margin-right: 20px;
+  }
 }
