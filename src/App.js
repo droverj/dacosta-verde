@@ -8,14 +8,14 @@ import './App.scss';
 const App = () => {
   return (
     <div className='App'>
+      <BrowserRouter>
       <Header />
       <Navbar />
-      <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              {/* <Route path="/checkout" element={<Checkout userId={userId} />} /> */}
-            </Routes>
-        </BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/checkout" element={<Checkout userId={userId} />} /> */}
+        </Routes>
+      </BrowserRouter>
     </div>
   )
 }
