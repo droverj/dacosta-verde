@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
+import About from './components/About';
+import Products from './components/Products';
+import Contact from './components/Contact';
 import './App.scss';
 
 const App = () => {
@@ -12,6 +15,9 @@ const App = () => {
       <Header />
       <Navbar />
         <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/" element={<Home />} />
           {/* <Route path="/checkout" element={<Checkout userId={userId} />} /> */}
         </Routes>
