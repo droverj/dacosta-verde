@@ -1,4 +1,4 @@
-@import "_variables";
+@import "../_variables";
 
 .Header {
   display: flex;
@@ -9,6 +9,10 @@
   height: 200px;
   color: #333;
   font-size: 2rem;
+
+  .logo {
+    height: 200px;
+  }
 
   h1 {
     font-variant: small-caps;
